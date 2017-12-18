@@ -2,16 +2,136 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Home</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.css">
+	<script
+			  src="https://code.jquery.com/jquery-3.2.1.js"
+			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+			  crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="main.css">
+	<script>
+		function getLocWeather(){
+			updateWeather("--", "--", "--");
+			navigator.geolocation.getCurrentPosition((pos) => {
+			  var lat = pos.coords.latitude;
+			  var lng = pos.coords.longitude;
+			  console.log(lat);
+			  console.log(lng);
+			  getWeather(lat, lng);
+			}, (err) => {
+			  console.log('Geolocation error: ', err);
+			}, {enableHighAccuracy: false});
+		}
+
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			h = format12(h);
+			var dd = today.getDate();
+			var month = new Array();
+			month[0] = "January";
+			month[1] = "February";
+			month[2] = "March";
+			month[3] = "April";
+			month[4] = "May";
+			month[5] = "June";
+			month[6] = "July";
+			month[7] = "August";
+			month[8] = "September";
+			month[9] = "October";
+			month[10] = "November";
+			month[11] = "December";
+			var mm = month[today.getMonth()];	
+			var yyyy = today.getFullYear();
+			document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
+			document.getElementById('date').innerHTML = mm + ', ' + dd  + ', ' + yyyy;
+			var t = setTimeout(startTime, 500);
+		}
+		
+		function checkTime(i) {
+			if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+			return i;
+		}
+		function format12(i) {
+			if (i > 12) {i = i - 12};  // add zero in front of numbers < 10
+			return i;
+		}
+		
+		$(document).ready(function(){
+			startTime();
+			getLocWeather();
+			setInterval(function() {
+				getLocWeather();
+			}, 600 * 1000);
+		});
+		
+		function updateWeather(ct, cs, ch, ci) {
+			document.getElementById('temp').innerHTML = ct + "°F";
+			document.getElementById('summary').innerHTML = cs;
+			document.getElementById('humidity').innerHTML = ch + "%";
+			document.getElementById('icon').className = ci;
+		}
+		
+		function getWeather(lat, lng){
+			console.log("trying to get weather");
+			var dsKey = "f43ec375abdbe7913897c3372c22602a";
+			var darksky = "https://api.darksky.net/forecast/" + dsKey + "/" + lat + "," + lng;
+			console.log(darksky);
+			jQuery.getJSON(darksky, function(data){
+				console.log(data);
+				var ct = data.currently.temperature;
+				var cs = data.currently.summary;
+				var ch = data.currently.humidity * 100;
+				var ci = "wi wi-forecast-io-" + data.currently.icon;
+				updateWeather(ct, cs, ch, ci);
+			});
+		}
+		
+		var today = new Date();
+		
+		
+	</script>
   </head>
   <body>
+  <!--<div>
     <h1>Hello World!</h1>
     We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
+    Chrominum <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+  </div>-->
+  
+  <hr />
+  
+  <div class='container-fluid'>
+  	<div class='row'>
+		<div class="col-6">
+			<!--<span style="font-size: 2.5em;">Outside</span> <br />-->
+			<span style="font-size: 1.75em;">--</span>
+			<span style="font-size: 1.75em;">'s Forcast</span><br />
+			<!--<span style="font-size: .8em;">Conditions:</span> <br />-->
+			<span id="icon" style="font-size: 1.5em;"></span>
+			<span id="summary" style="font-size: 1.5em;">--</span> <br />
+			<!--<span style="font-size: .8em;">Outside Temperature:</span> <br />-->
+			<span id="temp" style="font-size: 3em;">--</span> <br />
+			<span style="font-size: 1.25em;">Humidity: </span>
+			<span id="humidity" style="font-size: 1.25em;">--</span> <br />
+		</div>
+		<div class='col-6' style='float: right;'>
+			<div style="float: right;">
+				<span style="font-size: 2em;" id="date">--/--/----</span></br />
+				<span style="font-size: 5em;" id="clock">--:--:--</span>
+			</div>
+		</div>
+	</div>
+  </div>
+  
 </html>

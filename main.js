@@ -7,6 +7,10 @@ const url = require('url')
 let win
 
 function createWindow () {
+  //env variables
+  process.env.GOOGLE_API_KEY = 'AIzaSyCU2hjenZ2pJM4lb6S6M2pNb69j24lQU2M' //google apis
+
+
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600, frame: false})
   win.setFullScreen(true); //fullscreen window
@@ -18,6 +22,8 @@ function createWindow () {
     slashes: true
   }))
 
+
+  
   // Open the DevTools. (for debug)
   win.webContents.openDevTools()
 
