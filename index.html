@@ -62,7 +62,8 @@
 			return i;
 		}
 		function format12(i) {
-			if (i > 12) {i = i - 12};  // add zero in front of numbers < 10
+			if (i > 13) {i = i - 12};  
+			if (i < 1) {i = i + 12};  
 			return i;
 		}
 		
@@ -98,7 +99,13 @@
 		
 		var today = new Date();
 		
-		
+		const shell = require('electron').shell;
+
+	// assuming $ is jQuery
+	$(document).on('click', 'a[href^="http"]', function(event) {
+		event.preventDefault();
+		shell.openExternal(this.href);
+	});
 	</script>
   </head>
   <body>
@@ -127,11 +134,16 @@
 		</div>
 		<div class='col-6' style='float: right;'>
 			<div style="float: right;">
-				<span style="font-size: 2em;" id="date">--/--/----</span></br />
+				<span style="font-size: 2em;" id="date">-----, --, ----</span></br />
 				<span style="font-size: 5em;" id="clock">--:--:--</span>
 			</div>
 		</div>
 	</div>
+  </div>
+  <div id="foot">
+	<center>
+		<span>Credits: <a href="https://darksky.net/poweredby/">Weather API Provided by Dark Sky</a> | <a href="https://developers.google.com/products/">Multiple APIs Provided by Google</a>
+	</center>
   </div>
   
 </html>
