@@ -21,3 +21,23 @@ hr {
 	height: 30px;
 	font-size: .6em;
 }
+
+.alert{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top:  -7.5%;
+    margin-left: -25%;
+	background-color: black;
+	border-color: red;
+	height: 15%;
+	width: 50%;
+	text-align: center;
+	vertical-align: middle;
+	overflow: auto;
+}
+
+.alert-text{
+	color: red;
+	font-size: 3em;	
+}

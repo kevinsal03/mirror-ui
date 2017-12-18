@@ -23,6 +23,7 @@
 			  console.log(lat);
 			  console.log(lng);
 			  getWeather(lat, lng);
+			  getAddress(lat, lng);
 			}, (err) => {
 			  console.log('Geolocation error: ', err);
 			}, {enableHighAccuracy: false});
@@ -53,7 +54,7 @@
 			var mm = month[today.getMonth()];	
 			var yyyy = today.getFullYear();
 			document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
-			document.getElementById('date').innerHTML = mm + ', ' + dd  + ', ' + yyyy;
+			document.getElementById('date').innerHTML = mm + ' ' + dd  + ', ' + yyyy;
 			var t = setTimeout(startTime, 500);
 		}
 		
@@ -70,6 +71,7 @@
 		$(document).ready(function(){
 			startTime();
 			getLocWeather();
+			updateAlert(0);
 			setInterval(function() {
 				getLocWeather();
 			}, 600 * 1000);
@@ -80,6 +82,19 @@
 			document.getElementById('summary').innerHTML = cs;
 			document.getElementById('humidity').innerHTML = ch + "%";
 			document.getElementById('icon').className = ci;
+		}		
+		function updateAlert(alertStatus, alertText) {
+			if (alertStatus == 1) {
+				document.getElementById('alert').style.display = 'table-cell';
+				document.getElementById('alert-text').innerHTML = alertText;
+			} else {
+				document.getElementById('alert').style.display = 'none';
+				document.getElementById('alert-text').innerHTML = '--';
+			}
+		}
+		
+		function updateAddress(municipality, state) {
+			document.getElementById('location').innerHTML = municipality + ", " + state;
 		}
 		
 		function getWeather(lat, lng){
@@ -94,6 +109,15 @@
 				var ch = data.currently.humidity * 100;
 				var ci = "wi wi-forecast-io-" + data.currently.icon;
 				updateWeather(ct, cs, ch, ci);
+			});
+		}		
+		function getAddress(lat, lng){
+			console.log("trying to get address");
+			var geocode = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" +  process.env.GOOGLE_API_KEY;
+			console.log(geocode);
+			jQuery.getJSON(geocode, function(data){
+				console.log(data);
+				updateAddress(data.results[0].address_components[3].short_name, data.results[0].address_components[5].short_name);
 			});
 		}
 		
@@ -122,8 +146,8 @@
   	<div class='row'>
 		<div class="col-6">
 			<!--<span style="font-size: 2.5em;">Outside</span> <br />-->
-			<span style="font-size: 1.75em;">--</span>
-			<span style="font-size: 1.75em;">'s Forcast</span><br />
+			<span style="font-size: 1em;">Weather Forcast</span><br />
+			<span id="location" style="font-size: 1.75em;">--</span> <br />
 			<!--<span style="font-size: .8em;">Conditions:</span> <br />-->
 			<span id="icon" style="font-size: 1.5em;"></span>
 			<span id="summary" style="font-size: 1.5em;">--</span> <br />
@@ -134,11 +158,14 @@
 		</div>
 		<div class='col-6' style='float: right;'>
 			<div style="float: right;">
-				<span style="font-size: 2em;" id="date">-----, --, ----</span></br />
+				<span style="font-size: 2em;" id="date">----- --, ----</span></br />
 				<span style="font-size: 5em;" id="clock">--:--:--</span>
 			</div>
 		</div>
 	</div>
+  </div>
+  <div class="alert" id="alert">
+	<span class="alert-text" id="alert-text">-----</span>
   </div>
   <div id="foot">
 	<center>
