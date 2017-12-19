@@ -14,6 +14,7 @@
 			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
 			  crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="main.css">
+	<script src="hideMouse.js"></script>
 	<script>
 		function getLocWeather(){
 			updateWeather("--", "--", "--");
@@ -85,7 +86,7 @@
 		}		
 		function updateAlert(alertStatus, alertText) {
 			if (alertStatus == 1) {
-				document.getElementById('alert').style.display = 'table-cell';
+				document.getElementById('alert').style.display = 'initial';
 				document.getElementById('alert-text').innerHTML = alertText;
 			} else {
 				document.getElementById('alert').style.display = 'none';
@@ -130,6 +131,7 @@
 		event.preventDefault();
 		shell.openExternal(this.href);
 	});
+		
 	</script>
   </head>
   <body>
@@ -146,7 +148,7 @@
   	<div class='row'>
 		<div class="col-6">
 			<!--<span style="font-size: 2.5em;">Outside</span> <br />-->
-			<span style="font-size: 1em;">Weather Forcast</span><br />
+			<span style="font-size: 1em;">Weather Forecast</span><br />
 			<span id="location" style="font-size: 1.75em;">--</span> <br />
 			<!--<span style="font-size: .8em;">Conditions:</span> <br />-->
 			<span id="icon" style="font-size: 1.5em;"></span>

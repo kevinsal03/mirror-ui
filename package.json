@@ -1,5 +1,8 @@
 {
-  "name"    : "mirror-ui",
-  "version" : "0.0.1",
-  "main"    : "main.js"
+  "name": "mirror-ui",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+    "sysvol": "^0.1.1"
+  }
 }
